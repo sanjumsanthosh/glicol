@@ -162,6 +162,17 @@ o: meta `
 `
 ```
 
+### Points Node
+
+The `Points` node allows you to create a series of points that can be used to control other nodes. Each point consists of a time and a value. The time can be specified in bars, seconds, or milliseconds. The `Points` node can be used to create complex control signals for other nodes.
+
+Example:
+```
+o: points [0 => 0.0, 1/4 => 1.0, 1/2 => 0.5, 3/4 => 1.0, 1 => 0.0] >> mul 0.5
+```
+
+In this example, the `Points` node creates a series of points that control the amplitude of the `mul` node.
+
 ## Roadmap
 
 - [x] `0.1.0` hello world from `dasp_graph` and `pest.rs`, pass code from js to wasm, and lazy evaluation

@@ -11,7 +11,80 @@ fn ast_from_nodes<const N: usize>(
     })
 }
 
-// TODO: Write test for Component::Points parsing
+#[test]
+fn points() {
+    assert_eq!(
+        get_ast("o: points [0 => 0.0, 1/4 => 1.0, 1/2 => 0.5, 3/4 => 1.0, 1 => 0.0]"),
+        ast_from_nodes([(
+            "o",
+            vec![Component::Points(Points {
+                points: vec![
+                    (TimeList { bar: 0.0, time: None }, 0.0),
+                    (TimeList { bar: 0.25, time: None }, 1.0),
+                    (TimeList { bar: 0.5, time: None }, 0.5),
+                    (TimeList { bar: 0.75, time: None }, 1.0),
+                    (TimeList { bar: 1.0, time: None }, 0.0),
+                ],
+                span: 1.0,
+                is_looping: false,
+            })]
+        )])
+    );
+
+    assert_eq!(
+        get_ast("o: points [0 => 0.0, 1/4 => 1.0, 1/2 => 0.5, 3/4 => 1.0, 1 => 0.0] * 2"),
+        ast_from_nodes([(
+            "o",
+            vec![Component::Points(Points {
+                points: vec![
+                    (TimeList { bar: 0.0, time: None }, 0.0),
+                    (TimeList { bar: 0.25, time: None }, 1.0),
+                    (TimeList { bar: 0.5, time: None }, 0.5),
+                    (TimeList { bar: 0.75, time: None }, 1.0),
+                    (TimeList { bar: 1.0, time: None }, 0.0),
+                ],
+                span: 2.0,
+                is_looping: false,
+            })]
+        )])
+    );
+
+    assert_eq!(
+        get_ast("o: points [0 => 0.0, 1/4 => 1.0, 1/2 => 0.5, 3/4 => 1.0, 1 => 0.0] !"),
+        ast_from_nodes([(
+            "o",
+            vec![Component::Points(Points {
+                points: vec![
+                    (TimeList { bar: 0.0, time: None }, 0.0),
+                    (TimeList { bar: 0.25, time: None }, 1.0),
+                    (TimeList { bar: 0.5, time: None }, 0.5),
+                    (TimeList { bar: 0.75, time: None }, 1.0),
+                    (TimeList { bar: 1.0, time: None }, 0.0),
+                ],
+                span: 1.0,
+                is_looping: true,
+            })]
+        )])
+    );
+
+    assert_eq!(
+        get_ast("o: points [0 => 0.0, 1/4 => 1.0, 1/2 => 0.5, 3/4 => 1.0, 1 => 0.0] * 2 !"),
+        ast_from_nodes([(
+            "o",
+            vec![Component::Points(Points {
+                points: vec![
+                    (TimeList { bar: 0.0, time: None }, 0.0),
+                    (TimeList { bar: 0.25, time: None }, 1.0),
+                    (TimeList { bar: 0.5, time: None }, 0.5),
+                    (TimeList { bar: 0.75, time: None }, 1.0),
+                    (TimeList { bar: 1.0, time: None }, 0.0),
+                ],
+                span: 2.0,
+                is_looping: true,
+            })]
+        )])
+    );
+}
 
 #[test]
 fn delay() {
